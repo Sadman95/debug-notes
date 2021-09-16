@@ -7,13 +7,19 @@ let userName
 let userEmail
 
 
-fetch("https://randomuser.me/api/").then(res=>res.json()).then(data=>{
+try {
+  fetch("https://randomuser.me/api/")
+  .then(res=>res.json())
+  .then(data=>{
   // console.log(data.results);
   userName=data.results[0].name
   userImg=data.results[0].picture.medium 
   userEmail=data.results[0].email;
   displayUserInfo(userImg,userName,userEmail)
 })
+} catch{
+  console.log('');
+}
 function displayUserInfo(userImg,userName,userEmail) {
   document.getElementById("user-info").innerHTML = `
   <div class="card mb-3" style="max-width: 540px;">
@@ -81,9 +87,10 @@ saveNoteButton.addEventListener("click", function () {
 });
 
 // initially number of note is zero:
-let noteCount=0
+
 //function for displaying notes
 const showNotes = () => {
+  let noteCount=0;
   let notesArray = [];
   const allNotes = localStorage.getItem("notes");
   // condition over allnotes:
@@ -100,6 +107,7 @@ const showNotes = () => {
     } 
     else {
       document.getElementById("display-message").innerText = "Your notes...";
+      notesDiv.innerHTML = '';
       notesArray.map((element, index) => {
         // number of notes counted:
         noteCount++
@@ -148,7 +156,7 @@ const showNotes = () => {
 
 };
 
-// showNotes();
+showNotes();
 
 //function for make notes editable
 function contentEdit(id) {
@@ -190,23 +198,24 @@ document.getElementById("search-btn").addEventListener("click", (e) => {
   e.preventDefault();
 });
 
-//function for filtering notes on keyword input in search field..
-// function inputChange(event) {
-//   const searchedKey = event.target.value.toLowerCase();
-//   filterNotes(searchedKey);
-// }
+// function for filtering notes on keyword input in search field..
+function inputChange(event) {
+  const searchedKey = event.target.value.toLowerCase();
+  filterNotes(searchedKey);
+}
+
 
 const filterNotes = (searchedKey) => {
+  document.getElementById('notes-count').innerText = 0;
   const x = document.getElementsByClassName("single-card");
-
   for (let i = 0; i < x.length; i++) {
     const element = x[i];
-
     if (element.innerText.toLowerCase().includes(searchedKey)) {
       element.style.display = "block";
+      // noteCount++;
+      document.getElementById('notes-count').innerText++;
     } else {
       element.style.display = "none";
     }
   }
 };
-
